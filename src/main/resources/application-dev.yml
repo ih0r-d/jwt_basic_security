@@ -2,7 +2,9 @@ server:
   port: 5000
 spring:
   datasource:
-    url: jdbc:postgresql://172.17.0.2:5432/jwt_app_db
-    driver-class-name: org.postgresql.Driver
-    username: jwt_user
-    password: very_secret_password
+    url: jdbc:mysql://172.17.0.4:3306/jwt_app_db?serverTimezone=UTC&&useSSL=false
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    password: root
+
+

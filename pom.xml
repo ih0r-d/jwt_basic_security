@@ -17,6 +17,7 @@
     <properties>
         <java.version>1.8</java.version>
         <jwt.version>0.8.0</jwt.version>
+        <mysql.version>8.0.15</mysql.version>
         <maven.compiler.version>3.8.0</maven.compiler.version>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
@@ -54,9 +55,9 @@
         </dependency>
     <!--Database-->
         <dependency>
-            <groupId>org.postgresql</groupId>
-            <artifactId>postgresql</artifactId>
-            <scope>runtime</scope>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>${mysql.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
