@@ -19,5 +19,5 @@ public class Role extends BaseEntity{
     private Access accessLevel;
 
     @ManyToMany(mappedBy = "roles", fetch = FetchType.LAZY)
-    private List<User> users = new ArrayList<>();
+    private List<ApplicationUser> users = new ArrayList<>();
 }
