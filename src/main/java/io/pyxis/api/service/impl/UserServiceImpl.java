@@ -6,7 +6,7 @@ import io.pyxis.api.domain.repository.RoleRepository;
 import io.pyxis.api.domain.repository.UserRepository;
 import io.pyxis.api.exception.UnauthorizedException;
 import io.pyxis.api.service.UserService;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -16,7 +16,7 @@ import java.util.NoSuchElementException;
 
 @Service
 @Slf4j
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
@@ -53,9 +53,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public ApplicationUser findById(Long id) {
-        ApplicationUser user = userRepository
-                                .findById(id)
-                                .orElseThrow(UnauthorizedException::new);
+        ApplicationUser user = userRepository.findById(id)
+                                            .orElseThrow(UnauthorizedException::new);
         log.info("findById --> User: {} found by id: {}",user, id);
         return user;
     }

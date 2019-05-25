@@ -6,7 +6,7 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.pyxis.api.domain.model.Role;
 import io.pyxis.api.exception.CustomJwtTokenException;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -23,24 +23,26 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class JwtTokenProvider {
+
+    @Value("${jwt.token.secret}")
+    private String key;
 
     @Value("${jwt.token.expiration}")
     private long tokenExpiration;
 
-    @Value("jwt.token.secret")
-    private String key;
+    @Value("jwt.token.header")
+    private String header;
 
-    private final String TOKEN_PREFIX = "Bearer ";
-    private final String HEADER_STRING = "Authorization";
-
+    @Value("jwt.token.prefix")
+    private String prefix;
 
     private final JwtUserDetailsService userDetailsService;
 
     @PostConstruct
-    protected void init(){
-        key = encodeSecretKey(key);
+    protected void init() {
+        key = Base64.getEncoder().encodeToString(key.getBytes());
     }
 
     public String createToken(String name, List<Role> roles){
@@ -59,8 +61,8 @@ public class JwtTokenProvider {
     }
 
     public String resolveToken(HttpServletRequest req) {
-        String token = req.getHeader(HEADER_STRING);
-        if (token != null && token.startsWith(TOKEN_PREFIX)) {
+        String token = req.getHeader(header);
+        if (token != null && token.startsWith(prefix)) {
             return token.substring(7);
         }
         return null;
@@ -87,15 +89,10 @@ public class JwtTokenProvider {
                     .parseClaimsJws(token)
                     .getBody()
                     .getExpiration();
-            return expiredToken.before(new Date());
+            return !expiredToken.before(new Date());
         } catch (JwtException | IllegalArgumentException e){
             throw new CustomJwtTokenException("JWT token is invalid or expired", HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
     }
-
-    private String encodeSecretKey(String key){
-        return Base64.getEncoder().encodeToString(key.getBytes());
-    }
-
 }
